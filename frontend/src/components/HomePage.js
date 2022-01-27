@@ -13,7 +13,7 @@ import {
 	Navigate,
 } from "react-router-dom"
 
-export default function HomePage() {
+export default function HomePage(props) {
 	const [roomCode, setRoomCode] = useState()
 	useEffect(() => {
 		fetch("/api/user-in-room")
@@ -50,14 +50,19 @@ export default function HomePage() {
 			</Grid>
 		)
 	}
-
+	function RenderRoom() {
+		return <Room leaveRoomCallback={clearRoomCode} />
+	}
+	const clearRoomCode = () => {
+		setRoomCode(null)
+	}
 	return (
 		<Router>
 			<Routes>
 				<Route path="/" element={<RenderHomePage />}></Route>
 				<Route path="/join" element={<RoomJoinPage />}></Route>
 				<Route path="/create" element={<CreateRoomPage />}></Route>
-				<Route path="/room/:roomCode" element={<Room />}></Route>
+				<Route path="/room/:roomCode" element={<RenderRoom />} />{" "}
 			</Routes>
 		</Router>
 	)

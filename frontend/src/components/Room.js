@@ -3,7 +3,7 @@ import {useParams} from "react-router-dom"
 import {Grid, Button, Typography} from "@material-ui/core"
 import {useNavigate} from "react-router-dom"
 export default function Room(props) {
-	const history = useNavigate()
+	const navigate = useNavigate()
 	const initialState = {
 		votesToSKip: 2,
 		guestCanPause: false,
@@ -13,7 +13,13 @@ export default function Room(props) {
 	const {roomCode} = useParams()
 	useEffect(() => {
 		fetch("/api/get-room" + "?code=" + roomCode)
-			.then(res => res.json())
+			.then(res => {
+				if (!res.ok) {
+					props.leaveRoomCallback()
+					navigate("/")
+				}
+				return res.json()
+			})
 			.then(data => {
 				setRoomData({
 					...roomData,
@@ -29,9 +35,10 @@ export default function Room(props) {
 			method: "POST",
 			headers: {"Content-Type": "application/json"},
 		}
-		fetch("/api/leave-room", requestOptions).then(_response =>
+		fetch("/api/leave-room", requestOptions).then(_response => {
+			props.leaveRoomCallback()
 			navigate("/")
-		)
+		})
 	}
 
 	return (
