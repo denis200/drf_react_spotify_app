@@ -14,7 +14,12 @@ export default function Room(props) {
 	const [roomData, setRoomData] = useState(initialState)
 	const [showSettings, updateShowSettings] = useState()
 	const {roomCode} = useParams()
+	const [msg, setMsg] = useState("")
 	useEffect(() => {
+		getRoomDetails()
+	}, [roomCode, setRoomData])
+
+	function getRoomDetails() {
 		fetch("/api/get-room" + "?code=" + roomCode)
 			.then(res => {
 				if (!res.ok) {
@@ -31,7 +36,7 @@ export default function Room(props) {
 					isHost: data.is_host,
 				})
 			})
-	}, [roomCode, setRoomData])
+	}
 
 	function leaveButtonPressed() {
 		const requestOptions = {
@@ -55,7 +60,7 @@ export default function Room(props) {
 						votesToSkip={roomData.votesToSkip}
 						guestCanPause={roomData.guestCanPause}
 						roomCode={roomCode}
-						updateCallback={null}
+						updateCallback={getRoomDetails}
 					/>
 				</Grid>
 				<Grid item xs={12} align="center">
@@ -64,6 +69,7 @@ export default function Room(props) {
 						color="secondary"
 						onClick={() => {
 							handleShowSettings(false)
+							getRoomDetails()
 						}}
 					>
 						Close
