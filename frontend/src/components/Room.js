@@ -10,6 +10,7 @@ export default function Room(props) {
 		guestCanPause: false,
 		isHost: false,
 		showSettings: false,
+		spotifyAuthenticated: false,
 	}
 	const [roomData, setRoomData] = useState(initialState)
 	const [showSettings, updateShowSettings] = useState()
@@ -35,6 +36,25 @@ export default function Room(props) {
 					guestCanPause: data.guest_can_pause,
 					isHost: data.is_host,
 				})
+				if (roomData.isHost) authenticateSpotify()
+			})
+	}
+
+	function authenticateSpotify() {
+		fetch("/spotify/is-authenticated")
+			.then(response => response.json())
+			.then(data => {
+				setRoomData({
+					...roomData,
+					spotifyAuthenticated: data.status,
+				})
+				if (!data.status) {
+					fetch("/spotify/get-auth-url")
+						.then(response => response.json())
+						.then(data => {
+							window.location.replace(data.url)
+						})
+				}
 			})
 	}
 
