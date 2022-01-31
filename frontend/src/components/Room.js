@@ -4,6 +4,7 @@ import {Grid, Button, Typography} from "@material-ui/core"
 import CreateRoomPage from "./CreateRoomPage"
 import {useNavigate} from "react-router-dom"
 import MusicPlayer from "./MusicPlayer"
+
 export default function Room(props) {
 	const navigate = useNavigate()
 	const initialState = {
@@ -113,8 +114,6 @@ export default function Room(props) {
 						color="secondary"
 						onClick={() => {
 							handleShowSettings(false)
-							getRoomDetails()
-							getCurrentSong()
 						}}
 					>
 						Close
@@ -125,16 +124,18 @@ export default function Room(props) {
 	}
 	function renderSettingsButton() {
 		return (
-			<Grid item xs={12} align="center">
-				<Button
-					variant="contained"
-					color="primary"
-					onClick={() => {
-						handleShowSettings(true)
-					}}
-				>
-					Settings
-				</Button>
+			<Grid container spacing={2} style={{marginTop: "30px"}}>
+				<Grid item xs={12} align="center">
+					<Button
+						variant="contained"
+						color="primary"
+						onClick={() => {
+							handleShowSettings(true)
+						}}
+					>
+						Settings
+					</Button>
+				</Grid>
 			</Grid>
 		)
 	}
@@ -144,11 +145,25 @@ export default function Room(props) {
 				<RenderSettings />
 			) : (
 				<Grid container spacing={2}>
+					{roomData.spotifyAuthenticated ? null : (
+						<Grid item xs={12} align="center">
+							<img
+								src={
+									"https://cdn-icons-png.flaticon.com/512/174/174872.png"
+								}
+								height="50px"
+								onClick={() => {
+									authenticateSpotify()
+								}}
+							/>
+						</Grid>
+					)}
 					<Grid item xs={12} align="center">
 						<Typography variant="h4" component="h4">
 							Code: {roomCode}
 						</Typography>
 					</Grid>
+
 					<MusicPlayer {...song} />
 					{roomData.isHost ? renderSettingsButton() : null}
 					<Grid item xs={12} align="center">
