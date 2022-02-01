@@ -146,16 +146,23 @@ export default function Room(props) {
 			) : (
 				<Grid container spacing={2}>
 					{roomData.spotifyAuthenticated ? null : (
-						<Grid item xs={12} align="center">
-							<img
-								src={
-									"https://cdn-icons-png.flaticon.com/512/174/174872.png"
-								}
-								height="50px"
-								onClick={() => {
-									authenticateSpotify()
-								}}
-							/>
+						<Grid container spacing={1}>
+							<Grid item xs={12} align="center">
+								<img
+									src={
+										"https://cdn-icons-png.flaticon.com/512/174/174872.png"
+									}
+									height="50px"
+									onClick={() => {
+										authenticateSpotify()
+									}}
+								/>
+							</Grid>
+							<Grid item xs={12} align="center">
+								<Typography variant="h10" component="h10">
+									Auth with Spotify
+								</Typography>
+							</Grid>
 						</Grid>
 					)}
 					<Grid item xs={12} align="center">
